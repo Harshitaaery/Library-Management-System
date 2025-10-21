@@ -22,15 +22,54 @@ public class Library {
         people.add(obj);
     }
 
+    public boolean borrowBook(Person p, Book b) {
+    if (!people.contains(p)) {
+        System.out.println("Person not registered in the library.");
+        return false;
+    }
+
+    if (!books.contains(b)) {
+        System.out.println("This book does not belong to this library.");
+        return false;
+    }
+
+    if (b.isBorrowed()) {
+        System.out.println("Sorry, the book is already borrowed.");
+        return false;
+    }
+
+    borrowedBooks.putIfAbsent(p, new ArrayList<>());
+    if (borrowedBooks.get(p).size() >= p.getBorrowLimit()) {
+        System.out.println(p.getName() + " has reached their borrow limit.");
+        return false;
+    }
+
+    b.borrowBook();
+    borrowedBooks.get(p).add(b);
+    System.out.println(p.getName() + " borrowed " + b.getTitle());
+    return true;
+    }
     
-    public void returnBook(Person p, Book b){
-        if(borrowedBooks.get(p) == null){
-            System.out.println("Person not found");
-        }
-        else if (borrowedBooks.get(p).contains(b)){
-            borrowedBooks.get(p).remove(b);
-            b.returnBook();
-        }
-        else System.out.println("No such book found");    }
+public boolean returnBook(Person p, Book b) {
+    if (!borrowedBooks.containsKey(p)) {
+        System.out.println("Person not found or has not borrowed any books.");
+        return false;
+    }
+
+    List<Book> personBooks = borrowedBooks.get(p);
+    if (!personBooks.contains(b)) {
+        System.out.println("No such book found for " + p.getName());
+        return false;
+    }
+
+    b.returnBook();
+    personBooks.remove(b);
+    if (personBooks.isEmpty()) {
+        borrowedBooks.remove(p);
+    }
+
+    System.out.println(p.getName() + " returned " + b.getTitle());
+    return true;
+}
 
 }
