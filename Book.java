@@ -3,10 +3,11 @@ public class Book{
     private final String title;
     private final String author;
     private boolean borrowed;
+    private static int lastId = 0;
 
 
-    public Book(int id, String title, String author){
-        this.id = id;
+    public Book(String title, String author){
+        this.id = ++lastId;
         this.title = title;
         this.author = author;
         this.borrowed = false;

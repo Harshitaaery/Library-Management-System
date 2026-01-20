@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.InputMismatchException;
 public class Main {
     public static void main(String[] args) {
         Library lib = new Library();
@@ -15,19 +16,17 @@ public class Main {
             System.out.println("6. Exit");
             System.out.print("Choose an option: ");
 
+            try{
             int choice = sc.nextInt();
-            sc.nextLine(); // consume newline
+            sc.nextLine(); 
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter book id: ");
-                    int bookId = sc.nextInt();
-                    sc.nextLine();
                     System.out.print("Enter book title: ");
                     String title = sc.nextLine();
                     System.out.print("Enter author: ");
                     String author = sc.nextLine();
-                    lib.addBook(new Book(bookId, title, author));
+                    lib.addBook(new Book(title, author));
                     System.out.println("Book added successfully.");
                     break;
 
@@ -48,8 +47,8 @@ public class Main {
                     System.out.print("Enter book id: ");
                     int borrowBookId = sc.nextInt();
                     sc.nextLine();
-                    Person borrower = lib.people.stream().filter(p -> p.getId() == borrowId).findFirst().orElse(null);
-                    Book bookToBorrow = lib.books.stream().filter(b -> b.getId() == borrowBookId).findFirst().orElse(null);
+                    Person borrower = lib.getPeople().stream().filter(p -> p.getId() == borrowId).findFirst().orElse(null);
+                    Book bookToBorrow = lib.getBooks().stream().filter(b -> b.getId() == borrowBookId).findFirst().orElse(null);
                     if (borrower != null && bookToBorrow != null) lib.borrowBook(borrower, bookToBorrow);
                     else System.out.println("Member or Book not found.");
                     break;
@@ -60,15 +59,15 @@ public class Main {
                     System.out.print("Enter book id: ");
                     int returnBookId = sc.nextInt();
                     sc.nextLine();
-                    Person returner = lib.people.stream().filter(p -> p.getId() == returnId).findFirst().orElse(null);
-                    Book bookToReturn = lib.books.stream().filter(b -> b.getId() == returnBookId).findFirst().orElse(null);
+                    Person returner = lib.getPeople().stream().filter(p -> p.getId() == returnId).findFirst().orElse(null);
+                    Book bookToReturn = lib.getBooks().stream().filter(b -> b.getId() == returnBookId).findFirst().orElse(null);
                     if (returner != null && bookToReturn != null) lib.returnBook(returner, bookToReturn);
                     else System.out.println("Member or Book not found.");
                     break;
 
                 case 5:
                     System.out.println("--- All Books ---");
-                    for (Book b : lib.books) {
+                    for (Book b : lib.getBooks()) {
                         String status = b.isBorrowed() ? "Borrowed" : "Available";
                         System.out.println(b.getId() + ": " + b.getTitle() + " by " + b.getAuthor() + " [" + status + "]");
                     }
@@ -83,6 +82,12 @@ public class Main {
                     System.out.println("Invalid option.");
             }
         }
+        catch(InputMismatchException e)
+        {
+            System.out.println("Invalid input. Please enter a number.");
+            sc.nextLine();
+        }
+    }
 
         sc.close();
     }

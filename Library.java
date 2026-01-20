@@ -4,9 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Library {
-    public List<Book> books;
-    public List<Person> people;
-    public Map<Person, List<Book>> borrowedBooks;
+    private List<Book> books;
+    private List<Person> people;
+    private Map<Person, List<Book>> borrowedBooks;
+
+    public List<Book> getBooks() 
+    { 
+    return new ArrayList<>(books); 
+    }
+
+    public List<Person> getPeople() 
+    { 
+    return new ArrayList<>(people); 
+    }
 
     public Library(){
         books = new ArrayList<>();
@@ -15,11 +25,25 @@ public class Library {
     }
 
     public void addBook(Book obj){
+        for (int i = 0; i < books.size(); i++) {
+        Book b = books.get(i);
+        if (b.getId() == obj.getId()) {
+            System.out.println("Book with ID " + obj.getId() + " already exists!");
+            return;
+        }
+        }
         books.add(obj);
     }
 
     public void addPerson(Person obj){
-        people.add(obj);
+        for (int i = 0; i < people.size(); i++) {
+        Person p = people.get(i);
+        if (p.getId() == obj.getId()) {
+            System.out.println("Person with ID " + obj.getId() + " already exists!");
+            return;
+        }
+    }
+    people.add(obj);
     }
 
     public boolean borrowBook(Person p, Book b) {
